@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
+import sveltePreprocess from "svelte-preprocess";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -68,8 +69,17 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(), 
 	],
+	preprocess: sveltePreprocess({
+		sourceMap: !production,
+		postcss: {
+		  plugins: [
+		   require("tailwindcss"), 
+		   require("autoprefixer"),
+		  ],
+		},
+	}),
 	watch: {
 		clearScreen: false
 	}
